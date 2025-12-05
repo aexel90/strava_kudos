@@ -45,7 +45,7 @@ async function main() {
                 logger.info(`Would send kudos to: ${activity.athlete.athleteName} - ${activity.activityName}`);
             });
         } else {
-            await sendKudos(stravaClient, filteredActivities);
+            await sendKudos(stravaClient, filteredActivities, config);
         }
 
         logger.logScriptBoundary(false);
@@ -59,11 +59,13 @@ async function main() {
  * Send kudos to activities with basic rate limiting
  * @param {StravaClient} stravaClient - Strava client instance
  * @param {Array} activities - Activities to send kudos to
+ * @param {Config} config - Configuration object
  */
-async function sendKudos(stravaClient, activities) {
+async function sendKudos(stravaClient, activities, config) {
     let successCount = 0;
     let errorCount = 0;
-    const defaultDelayMs = 1000; // Default 1 second delay
+    const minDelayMs = config.rateLimiting.minDelayMs;
+    const maxDelayMs = config.rateLimiting.maxDelayMs;
 
     for (const [index, activity] of activities.entries()) {
         try {
@@ -75,8 +77,9 @@ async function sendKudos(stravaClient, activities) {
 
             // Rate limiting delay (except for last request)
             if (index < activities.length - 1) {
-                logger.debug(`Waiting ${defaultDelayMs}ms before next request...`);
-                await sleep(defaultDelayMs);
+                const randomDelay = Math.floor(Math.random() * (maxDelayMs - minDelayMs + 1)) + minDelayMs;
+                logger.debug(`Waiting ${randomDelay}ms before next request...`);
+                await sleep(randomDelay);
             }
         } catch (error) {
             logger.error(`Failed to send kudos to activity ${activity.id}:`, error.message);

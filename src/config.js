@@ -13,6 +13,9 @@ import yaml from 'js-yaml';
  * @property {Object} [kudoRules.minDistance] - Minimum distance by activity type
  * @property {Object} [kudoRules.minTime] - Minimum time by activity type
  * @property {string[]} [kudoRules.activityNames] - Activity name patterns to always give kudos
+ * @property {Object} [rateLimiting] - Rate limiting configuration
+ * @property {number} [rateLimiting.minDelayMs] - Minimum delay between requests in milliseconds
+ * @property {number} [rateLimiting.maxDelayMs] - Maximum delay between requests in milliseconds
  */
 
 /**
@@ -85,6 +88,21 @@ function validateConfig(config) {
         if (kudoRules.minTime && typeof kudoRules.minTime !== 'object') throw new Error("'kudoRules.minTime' must be an object if provided");
         if (kudoRules.activityNames && !Array.isArray(kudoRules.activityNames)) throw new Error("'kudoRules.activityNames' must be an array if provided");
     }
+
+    // Validate rateLimiting structure if present
+    if (config.rateLimiting) {
+        const { rateLimiting } = config;
+
+        if (rateLimiting.minDelayMs !== undefined && (typeof rateLimiting.minDelayMs !== 'number' || rateLimiting.minDelayMs < 0)) {
+            throw new Error("'rateLimiting.minDelayMs' must be a non-negative number if provided");
+        }
+        if (rateLimiting.maxDelayMs !== undefined && (typeof rateLimiting.maxDelayMs !== 'number' || rateLimiting.maxDelayMs < 0)) {
+            throw new Error("'rateLimiting.maxDelayMs' must be a non-negative number if provided");
+        }
+        if (rateLimiting.minDelayMs !== undefined && rateLimiting.maxDelayMs !== undefined && rateLimiting.minDelayMs > rateLimiting.maxDelayMs) {
+            throw new Error("'rateLimiting.minDelayMs' cannot be greater than 'rateLimiting.maxDelayMs'");
+        }
+    }
 }
 
 /**
@@ -101,6 +119,10 @@ function normalizeConfig(config) {
             minDistance: config.kudoRules?.minDistance || {},
             minTime: config.kudoRules?.minTime || {},
             activityNames: config.kudoRules?.activityNames || [],
+        },
+        rateLimiting: {
+            minDelayMs: config.rateLimiting?.minDelayMs ?? 1000,
+            maxDelayMs: config.rateLimiting?.maxDelayMs ?? 1000,
         },
     };
 }
