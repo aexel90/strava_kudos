@@ -55,6 +55,9 @@ A Node.js application designed to intelligently automate giving kudos to Strava 
   - **`minDistance`**: Minimum distance by activity type (e.g., `{"Run": 5, "Ride": 20}`)
   - **`minTime`**: Minimum duration in minutes by activity type (e.g., `{"Run": 30, "Ride": 60}`)
   - **`activityNames`**: Array of regex patterns for activity names that always get kudos
+- **`rateLimiting`**: Object containing rate limiting configuration:
+  - **`minDelayMs`**: Minimum delay between requests in milliseconds (default: 1000)
+  - **`maxDelayMs`**: Maximum delay between requests in milliseconds (default: 1000)
 
 ### Configuration File Priority
 
@@ -88,6 +91,10 @@ The app looks for config files in this order:
       "birthday.*run",
       "charity"
     ]
+  },
+  "rateLimiting": {
+    "minDelayMs": 800,
+    "maxDelayMs": 2000
   }
 }
 ```
@@ -113,6 +120,9 @@ kudoRules:
     - "race|marathon|competition"
     - "birthday.*run"
     - "charity"
+rateLimiting:
+  minDelayMs: 800
+  maxDelayMs: 2000
 ```
 
 ## 🖥️ Command Line Options

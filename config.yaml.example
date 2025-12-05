@@ -25,3 +25,6 @@ kudoRules:
     - "race|marathon|competition"
     - "birthday.*run"
     - "charity"
+rateLimiting:
+  minDelayMs: 800
+  maxDelayMs: 2000
