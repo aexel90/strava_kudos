@@ -8,7 +8,6 @@
     ],
     "kudoRules": {
         "minDistance": {
-            "GroupActivity": 5,
             "Run": 5,
             "TrailRun": 5,
             "Ride": 20,

@@ -63,7 +63,7 @@ The app looks for config files in this order:
 2. `config.yaml` 
 3. `config.yml`
 
-**Note**: If multiple config files exist, the app will use the first one found in the priority order above and log which file it's using. Only one config file will actually be loaded.
+**Note**: Only one config file is supported. If multiple config files exist, the app will throw an error — remove all but one.
 
 ### Example JSON Configuration
 
@@ -297,7 +297,6 @@ The application follows a **modular ES6 architecture**:
 
 - **`winston@^3.11.0`**: Professional logging with colors and timestamps
 - **`js-yaml@^4.1.0`**: YAML configuration file support
-- **`html-entities@^2.5.2`**: HTML entity decoding for Strava responses
 
 ## 📋 Troubleshooting
 

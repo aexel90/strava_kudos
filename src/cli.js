@@ -1,49 +1,17 @@
-/**
- * Command-line interface utilities
- */
-
-/**
- * Parse command line arguments
- * @param {string[]} args - Command line arguments (process.argv)
- * @returns {Object} Parsed options
- */
 export function parseArgs(args = process.argv) {
-    const options = {
-        dryRun: false,
-        verbose: false,
-        help: false,
-    };
+    const options = { dryRun: false, verbose: false, help: false };
 
     for (let i = 2; i < args.length; i++) {
         const arg = args[i];
-
-        switch (arg) {
-            case '--dry-run':
-            case '-d':
-                options.dryRun = true;
-                break;
-            case '--verbose':
-            case '-v':
-                options.verbose = true;
-                break;
-            case '--help':
-            case '-h':
-                options.help = true;
-                break;
-            default:
-                if (arg.startsWith('-')) {
-                    throw new Error(`Unknown option: ${arg}`);
-                }
-                break;
-        }
+        if (arg === '--dry-run' || arg === '-d') options.dryRun = true;
+        else if (arg === '--verbose' || arg === '-v') options.verbose = true;
+        else if (arg === '--help' || arg === '-h') options.help = true;
+        else if (arg.startsWith('-')) throw new Error(`Unknown option: ${arg}`);
     }
 
     return options;
 }
 
-/**
- * Display help information
- */
 export function showHelp() {
     console.log(`
 Strava Kudos Automation Tool
@@ -60,16 +28,7 @@ Examples:
   node main.js                        # Send kudos to all qualifying activities
 
 Configuration:
-  Place your configuration in config.json, config.yaml, or config.yml
-  See config.json.example or config.yaml.example for reference
+  Place your configuration in config.yaml (or config.json / config.yml)
+  See config.yaml.example for reference
 `);
-}
-
-/**
- * Sleep for specified duration
- * @param {number} ms - Milliseconds to sleep
- * @returns {Promise<void>}
- */
-export function sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
 }

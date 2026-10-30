@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "main": "main.js",
   "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "start": "node main.js"
   },
   "dependencies": {
-    "html-entities": "^2.5.2",
     "js-yaml": "^4.1.0",
     "winston": "^3.11.0"
   }
